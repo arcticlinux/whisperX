@@ -48,9 +48,14 @@ def format_timestamp(seconds: float, always_include_hours: bool = False, decimal
 
 
 def write_txt(transcript: Iterator[dict], file: TextIO):
+    last_speaker = ''
     for segment in transcript:
-        if "speaker" in segment:
-            speaker_str = f"[{segment['speaker']}]: "
+        if 'speaker' in segment:
+            speaker = segment['speaker']
+            speaker_str = f"[{speaker}]: "
+            if last_speaker == speaker:
+                speaker_str = ' ' * len(speaker_str)
+            last_speaker = speaker
         else:
             speaker_str = ""
         print(speaker_str, segment['text'].strip(), file=file, flush=True)
